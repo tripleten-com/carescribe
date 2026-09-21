@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
+
+# MLflow's local store and training checkpoints are big and rebuildable; the exported
+# mlflow_runs.csv and your final adapter are what you commit.
+mlruns/
+mlartifacts/
+mlflow.db
+runs/*/checkpoint-*/
+
+# The dataset you build is tracked by DVC, not Git. `dvc add data/dataset` writes data/dataset.dvc,
+# which you DO commit. data/raw/ is the input corpus and stays in Git.
+/data/dataset
+/data/interim
