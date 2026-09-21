@@ -37,6 +37,15 @@ class or, with 16 GB, a 1.5B model as a stretch; and there is no `nvidia-smi`, s
 line for your spec. Close memory-hungry apps before training and keep the lid open: macOS pauses a run when the
 laptop sleeps (`caffeinate -i python src/train.py ...` prevents idle sleep).
 
+#### Training memory on a Mac
+
+PyTorch's `mps` allocator keeps a cached buffer for every new sequence length it meets and does not hand them back,
+so with notes of varying length it can hold 15 GB for 2 GB of live tensors, and a 16 GB Mac starts swapping. Call
+`torch.mps.empty_cache()` after each micro-batch (a `TrainerCallback` with `on_substep_end` and `on_step_end` does
+it). In one test that cut the peak from 15.4 GB to 8.7 GB and made the run faster. When you report peak memory, say
+which number it is: `torch.mps.driver_allocated_memory()` is what the OS sees, `current_allocated_memory()` is what
+your tensors hold.
+
 #### Generating text on a Mac
 
 On some macOS versions (seen on macOS 14.6 with PyTorch 2.7, 2.8 and 2.9), `model.generate()` aborts Python on the
