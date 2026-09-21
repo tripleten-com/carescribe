@@ -107,6 +107,15 @@ def main():
         print(f"TIER  {tier}")
         print("      4-bit (QLoRA) loading needs an NVIDIA GPU. On a Mac the frozen base stays in full precision,")
         print("      so say 'plain LoRA, fp32, device mps' in spec section 3, and rule QLoRA out in section 7.")
+        probe = ("import torch; s=torch.randn(1,151936,device='mps'); i=torch.tensor([[1,2,3]],device='mps'); "
+                 "torch.gather(s,1,i).cpu()")
+        if subprocess.run([sys.executable, "-c", probe], capture_output=True).returncode != 0:
+            print(f"{WARN} On this macOS version, model.generate() with a repetition penalty crashes Python on the mps")
+            print("       device (`total bytes of NDArray > 2**32`). Qwen models set repetition_penalty=1.1 by default, so")
+            print("       EVERY generate() call is affected until you handle it. README, 'Generating text on a Mac', has")
+            print("       the ten-line fix. Training is not affected.")
+        else:
+            print(f"{OK} generate() with a repetition penalty works on this macOS version")
         print("\nPaste into finetune_spec.md section 6:")
         print(f"  Machine: {chip}, {ram:.0f} GB unified memory shared with the OS, PyTorch device `mps`, no NVIDIA GPU")
         print("  (so there is no nvidia-smi line). Plan for training to use at most about 60% of that memory.")

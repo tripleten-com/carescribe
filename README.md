@@ -37,6 +37,33 @@ class or, with 16 GB, a 1.5B model as a stretch; and there is no `nvidia-smi`, s
 line for your spec. Close memory-hungry apps before training and keep the lid open: macOS pauses a run when the
 laptop sleeps (`caffeinate -i python src/train.py ...` prevents idle sleep).
 
+#### Generating text on a Mac
+
+On some macOS versions (seen on macOS 14.6 with PyTorch 2.7, 2.8 and 2.9), `model.generate()` aborts Python on the
+`mps` device with `total bytes of NDArray > 2**32` whenever a repetition penalty is active. Qwen models ship
+`repetition_penalty=1.1` in their default generation config, so every `generate()` call is affected. `check_env.py` tells you whether your machine has the
+problem. Training is not affected. Two ways to handle it; whichever you pick, use it for the base model and the
+tuned model alike and write it into your spec's decoding parameters.
+
+- Switch the penalty off: pass `repetition_penalty=1.0` to `generate()`.
+- Keep your penalty and apply it on the CPU. Pass `repetition_penalty=1.0` and
+  `logits_processor=LogitsProcessorList([CpuRepetitionPenalty(1.05)])`:
+
+```python
+import torch
+from transformers import LogitsProcessor, LogitsProcessorList
+
+class CpuRepetitionPenalty(LogitsProcessor):
+    def __init__(self, penalty):
+        self.penalty = penalty
+
+    def __call__(self, input_ids, scores):
+        s, ids = scores.cpu(), input_ids.cpu()
+        score = torch.gather(s, 1, ids)
+        score = torch.where(score < 0, score * self.penalty, score / self.penalty)
+        return s.scatter(1, ids, score).to(scores.device)
+```
+
 If Python reports `CERTIFICATE_VERIFY_FAILED` when downloading, run the `Install Certificates.command` that came
 with your python.org installer, once.
 
