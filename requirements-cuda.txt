@@ -1,4 +1,4 @@
 # NVIDIA GPU only (Windows or Linux). Adds 4-bit loading for QLoRA.
-# Install torch from the CUDA index FIRST (see README), then:  pip install -r requirements-cuda.txt
+# Install torch from the CUDA index FIRST (see README), then:  pip install -r requirements-cuda.txt -c constraints.txt
 -r requirements.txt
 bitsandbytes==0.45.5

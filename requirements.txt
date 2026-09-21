@@ -1,5 +1,5 @@
 # Pinned to the versions the course lessons and the reference build were verified on.
-# Python 3.10 to 3.13. Install with:  pip install -r requirements.txt
+# Python 3.10 to 3.13. Install with:  pip install -r requirements.txt -c constraints.txt
 # NVIDIA GPU on Windows or Linux? Read README "Set up your machine" first: torch comes from the CUDA index,
 # then install requirements-cuda.txt instead of this file.
 torch==2.7.1
@@ -11,7 +11,7 @@ evaluate==0.4.3
 rouge-score==0.1.2
 bert-score==0.3.13
 mlflow==2.22.0
-dvc==3.59.2
+dvc==3.67.1
 spacy==3.8.7
 en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
 pandas==2.2.3

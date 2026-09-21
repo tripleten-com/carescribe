@@ -12,6 +12,7 @@ build, following the project lessons.
 | `data/fixtures/phi_seeded.jsonl` | Eight invented notes with planted identifiers, for testing your scrubber |
 | `requirements.txt` | Library versions the lessons were verified on. Use them as they are |
 | `requirements-cuda.txt` | The same, plus 4-bit loading for NVIDIA GPUs |
+| `constraints.txt` | Exact versions of every sub-dependency, so an install next month matches an install today |
 | `src/check_env.py` | Reads your machine and tells you which hardware tier you are in |
 | `src/build_corpus_pmc.py` | How the corpus was made. For reading, not for running |
 | `notebooks/colab_train.ipynb` | Runs your training scripts on a free hosted GPU, if your laptop has none |
@@ -27,7 +28,7 @@ You need Python 3.10 to 3.13 and Git. Pick your machine below, then run the chec
 python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r requirements.txt -c constraints.txt
 ```
 
 Your GPU is used through PyTorch's `mps` device. Two things differ from the lessons, which assume NVIDIA:
@@ -50,7 +51,7 @@ python -m venv .venv
 # Linux:              source .venv/bin/activate
 pip install --upgrade pip
 pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cu126
-pip install -r requirements-cuda.txt
+pip install -r requirements-cuda.txt -c constraints.txt
 ```
 
 Run `nvidia-smi` and note the memory line and the driver version. If `torch.cuda.is_available()` is false after
