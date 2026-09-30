@@ -8,7 +8,7 @@ build, following the project lessons.
 
 | Path | What it is |
 |---|---|
-| `data/raw/` | The corpus: 700 note-and-summary pairs and a medication lexicon. Read `data/raw/README.md` |
+| `data/raw/` | The corpus: 1,700 note-and-summary pairs and a medication lexicon. Read `data/raw/README.md` |
 | `data/fixtures/phi_seeded.jsonl` | Eight invented notes with planted identifiers, for testing your scrubber |
 | `requirements.txt` | Library versions the lessons were verified on. Use them as they are |
 | `requirements-cuda.txt` | The same, plus 4-bit loading for NVIDIA GPUs |
